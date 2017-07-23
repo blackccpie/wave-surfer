@@ -1,7 +1,33 @@
-#include <iostream>
+/*
+The MIT License
+
+Copyright (c) 2017-2017 Albert Murienne
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+#include "game.h"
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include "game.h"
+
+#include <iostream>
 #include <chrono>
 
 static void update(game* game, double deltaTime, SDL_GameController *currentController, bool &menu);
@@ -33,10 +59,12 @@ int main(int argc, char* argv[])
 	SDL_GetDesktopDisplayMode(0, &display);
 
 	SDL_Window* window = SDL_CreateWindow("Wave Surfer", display.w / 4, display.h /4, display.w / 2, display.h / 2, SDL_WINDOW_RESIZABLE);
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, NULL);
+	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
 	// MAGIC CODE IN HERE THANKS GOODBYE
 	SDL_RenderSetLogicalSize(renderer, 1024, 576);
+
+	std::cout << window << " " << renderer << std::endl;
 
 	game game(window, renderer);
 	game.running = true;

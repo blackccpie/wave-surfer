@@ -1,11 +1,30 @@
+/*
+The MIT License
+
+Copyright (c) 2017-2017 Albert Murienne
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
 #include "game.h"
+
 #include <math.h>
-
-
-game::game()
-{
-
-}
 
 game::game(SDL_Window* inWindow, SDL_Renderer* inRenderer)
 {
@@ -18,28 +37,28 @@ game::game(SDL_Window* inWindow, SDL_Renderer* inRenderer)
 
 	load_Surfaces();
 
-	if (window != 0)
+	if (!window )
 	{
-		SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init Error: %s\n", SDL_GetError());
+		SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "Window SDL_Init Error: %s\n", SDL_GetError());
 	}
 	else
 	{
 		SDL_Log("Window Initialised OK!\n");
 	}
 
-	if (renderer != 0)
+	if (!renderer)
 	{
-		SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init Error: %s\n", SDL_GetError());
+		SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "Renderer SDL_Init Error: %s\n", SDL_GetError());
 	}
 	else
 	{
-		SDL_Log("Window Initialised OK!\n");
+		SDL_Log("Renderer Initialised OK!\n");
 	}
 
 	score = 0;
 	startTime = SDL_GetTicks();
 
-	obSpawner = new ObstSpawner(renderer, seagullSurf);
+	obSpawner = new obst_spawner(renderer, seagullSurf);
 
 	Sprite* temp = new Sprite(1024, 2304, 0, -1728, renderer, -1, bgSurf, 0.033, 720);
 	bg.emplace_back(temp);
@@ -63,7 +82,7 @@ game::game(SDL_Window* inWindow, SDL_Renderer* inRenderer)
 		cloudList.push_back(tempCloud2);
 	}
 
-	scoreText = new Text("", *rendW - 110, *rendH-60, 100, 50, renderer, scoreFont);
+	scoreText = new text("", *rendW - 110, *rendH-60, 100, 50, renderer, scoreFont);
 
 	for (int x = 0; x < 500; x++)
 	{
@@ -413,15 +432,4 @@ bool game::checkLandAngle()
 
 
 	return false;
-}
-
-game::~game()
-{
-
-}
-
-
-
-double Wave::updatePos(SDL_GameController *currentController, double dt) {
-	return (SDL_GameControllerGetAxis(currentController, SDL_CONTROLLER_AXIS_LEFTY) * 0.0001) * dt;
 }
