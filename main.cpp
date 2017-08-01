@@ -67,33 +67,7 @@ int main(int argc, char* argv[])
 	std::cout << window << " " << renderer << std::endl;
 
 	game game(window, renderer);
-	game.running = true;
-
-	/*std::chrono::high_resolution_clock::time_point prevTime = std::chrono::high_resolution_clock::now();
-	double acc = 0.0;
-	double dt = 0.00025;
-	double t = 0.0;
-	int frameCounter = 0;*/
-
-	//Controller bindings
-	SDL_GameController *controllers[8];
-
-	//Finds all connected controllers and adds them to the above array
-	int controllerNum = 0;
-	for (int i = 0; i < SDL_NumJoysticks(); i++) {
-		if (i >= 8) {
-			break;
-		}
-		if (SDL_IsGameController(i)) {
-			controllers[controllerNum] = SDL_GameControllerOpen(i);
-			controllerNum++;
-		}
-	}
-
-	//If no controllers are detected set first controller to null pointer to allow other bits of code to function gracefully
-	if (controllerNum == 0) {
-		controllers[controllerNum] = nullptr;
-	}
+	game.m_running = true;
 
 	int start = SDL_GetTicks();
 	int time = 0;
@@ -102,16 +76,8 @@ int main(int argc, char* argv[])
 	bool menu = true;
 	bool fullscreen = false;
 
-	while (game.running)
+	while( game.m_running )
 	{
-		/*auto currTime = std::chrono::high_resolution_clock::now();
-		auto deltaTime = std::chrono::duration_cast<std::chrono::nanoseconds>(currTime - prevTime);
-		double frameTimeNano = deltaTime.count();
-		double frameTimeSec = frameTimeNano / 1000000000;
-		prevTime = currTime;
-
-		acc += frameTimeSec;*/
-
 		//##### GAME LOOP #####
 
 		start = SDL_GetTicks();
@@ -121,7 +87,7 @@ int main(int argc, char* argv[])
 		//std::cout << actualDT << std::endl;
 
 		process_input(&game,display,window,fullscreen);
-		update(&game, actualDT, controllers[0], menu);
+		update(&game, actualDT, nullptr, menu);
 		render(&game);
 
 		time = SDL_GetTicks() - start;
@@ -137,19 +103,7 @@ int main(int argc, char* argv[])
 
 		dt = (SDL_GetTicks() - start);
 
-
-
 		//#####################
-
-		/*if (frameCounter > 100)
-		{
-			SDL_Log("FPS: %s \n", frameTimeSec);
-			frameCounter = 0;
-		}
-		else
-		{
-			frameCounter++;
-		}*/
 	}
 
 	return 0;
@@ -172,33 +126,38 @@ void process_input(game* game, SDL_DisplayMode &display, SDL_Window* window, boo
 			switch (event.key.keysym.sym)
 			{
 			case SDLK_ESCAPE:
-				game->running = false;
+				game->m_running = false;
+				break;
+			case SDLK_a:
+				game->m_play = true;
+				break;
+			case SDLK_f:
+				{
+					if (fullscreen)
+					{
+						//Exiting fullscreen, setting a new resolution seems to be futile
+						SDL_SetWindowFullscreen(window, 0);
+						//SDL_SetWindowSize(win, 640, 360);
+						fullscreen = false;
+					}
+					else
+					{
+						//Entering fullscreen, gets screen size, sets the game to that and then enters fullscreen
+						SDL_GetCurrentDisplayMode(0, &display);
+						int width = display.w;
+						int height = display.h;
+						SDL_SetWindowSize(window, width, height);
+						SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+						fullscreen = true;
+					}
+				}
 				break;
 			default:
 				break;
 			}
-
-			if (event.key.keysym.sym == SDLK_f) {
-				if (fullscreen) {
-					//Exiting fullscreen, setting a new resolution seems to be futile
-
-					SDL_SetWindowFullscreen(window, 0);
-					//SDL_SetWindowSize(win, 640, 360);
-					fullscreen = false;
-				}
-				else {
-					//Entering fullscreen, gets screen size, sets the game to that and then enters fullscreen
-					SDL_GetCurrentDisplayMode(0, &display);
-					int width = display.w;
-					int height = display.h;
-					SDL_SetWindowSize(window, width, height);
-					SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
-					fullscreen = true;
-				}
-			}
-		}
-		if (event.type == SDL_QUIT) {
-			game->running = false;
+			break;
+		case SDL_QUIT:
+			game->m_running = false;
 			break;
 		}
 	}
@@ -217,7 +176,7 @@ void render(game* game)
 		SDL_RenderCopy(game->renderer, cloud->texture, &cloud->srcRect, &cloud->dstRect);
 	}
 
-	SDL_RenderCopy(game->renderer, game->waves->texture, NULL, &game->waves->dstRect);
+	SDL_RenderCopy(game->renderer, game->m_waves->texture, NULL, &game->m_waves->dstRect);
 
 	for (auto& sprite : game->spriteList)
 	{
@@ -230,12 +189,5 @@ void render(game* game)
 	}
 
 	SDL_RenderCopy(game->renderer, game->scoreText->texture, NULL, &game->scoreText->rect);
-
-
-	/*for (auto& px : game->pixelList)
-	{
-		SDL_RenderCopy(game->renderer, px->texture, NULL, &px->dstRect);
-	}*/
-
 	SDL_RenderPresent(game->renderer);
 }

@@ -27,12 +27,12 @@ THE SOFTWARE.
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-class Sprite
+class sprite
 {
 public:
 
-	Sprite(int w, int h, double x, double y, SDL_Renderer* renderer, int animStyle, SDL_Surface* surface, double animDur, int srcWidth);
-	Sprite() = default;
+	sprite(int w, int h, double x, double y, SDL_Renderer* renderer, int animStyle, SDL_Surface* surface, double animDur, int srcWidth);
+	sprite() = default;
 
 	void update(double deltaTime);
 	void animateForward(double deltaTime);
@@ -54,10 +54,10 @@ public:
 	double flipAcc;
 };
 
-class Wave : public Sprite {
+class wave : public sprite {
 public:
 
-	Wave(int w, int h, double x, double y, SDL_Renderer* renderer, int animStyle, SDL_Surface* surface, double animDur, int srcWidth);
+	wave(int w, int h, double x, double y, SDL_Renderer* renderer, int animStyle, SDL_Surface* surface, double animDur, int srcWidth);
 
 	double lastInp = 0;
 

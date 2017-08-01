@@ -31,7 +31,6 @@ class text
 {
 public:
 	text(char* inText, int x, int y, int w, int h, SDL_Renderer* inRenderer, TTF_Font* inFont);
-
 	void update_texture(const char* inText);
 
 	SDL_Renderer* renderer;

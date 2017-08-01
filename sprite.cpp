@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "sprite.h"
 
-Sprite::Sprite(int w, int h, double x, double y, SDL_Renderer* inRenderer, int inAnimStyle, SDL_Surface* inSurface, double inAnimDur, int inSrcWidth)
+sprite::sprite(int w, int h, double x, double y, SDL_Renderer* inRenderer, int inAnimStyle, SDL_Surface* inSurface, double inAnimDur, int inSrcWidth)
 {
 	dstRect.h = h;
 	dstRect.w = w;
@@ -63,7 +63,7 @@ Sprite::Sprite(int w, int h, double x, double y, SDL_Renderer* inRenderer, int i
 	flipAcc = 0;
 }
 
-void Sprite::update(double dt)
+void sprite::update(double dt)
 {
 	if (animStyle == 0)
 	{
@@ -75,7 +75,7 @@ void Sprite::update(double dt)
 	}
 }
 
-void Sprite::animateForward(double dt)
+void sprite::animateForward(double dt)
 {
 	if (animAcc > animDur)
 	{
@@ -90,7 +90,7 @@ void Sprite::animateForward(double dt)
 	animAcc += dt;
 }
 
-void Sprite::animatePingPong(double dt)
+void sprite::animatePingPong(double dt)
 {
 	if (animAcc > animDur)
 	{
@@ -119,7 +119,7 @@ void Sprite::animatePingPong(double dt)
 	animAcc += dt;
 }
 
-Wave::Wave(int w, int h, double x, double y, SDL_Renderer* inRenderer, int inAnimStyle, SDL_Surface* inSurface, double inAnimDur, int inSrcWidth)
+wave::wave(int w, int h, double x, double y, SDL_Renderer* inRenderer, int inAnimStyle, SDL_Surface* inSurface, double inAnimDur, int inSrcWidth)
 {
 	dstRect.h = h;
 	dstRect.w = w;
@@ -156,7 +156,7 @@ Wave::Wave(int w, int h, double x, double y, SDL_Renderer* inRenderer, int inAni
 	lastInp = 0;
 }
 
-double Wave::updatePos(SDL_GameController *currentController, double dt)
+double wave::updatePos(SDL_GameController *currentController, double dt)
 {
 	return (SDL_GameControllerGetAxis(currentController, SDL_CONTROLLER_AXIS_LEFTY) * 0.0001) * dt;
 }

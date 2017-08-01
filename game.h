@@ -47,21 +47,22 @@ public:
 
 	SDL_Window* window;
 	SDL_Renderer* renderer;
-	bool running;
+	bool m_running;
+	bool m_play;
 
 	obst_spawner* obSpawner;
-	Sprite* sprite;
-	Sprite* sea;
-	Sprite* pressA;
+	sprite* m_sprite;
+	sprite* sea;
+	sprite* pressA;
 	text* scoreText;
-	Wave* waves;
+	wave* m_waves;
 	double score;
 	int startTime;
 
-	std::vector<Sprite*> bg;
-	std::vector<Sprite*> spriteList;
-	std::vector<Sprite*> cloudList;
-	std::vector<Sprite*> pixelList;
+	std::vector<sprite*> bg;
+	std::vector<sprite*> spriteList;
+	std::vector<sprite*> cloudList;
+	std::vector<sprite*> pixelList;
 private:
 	SDL_Surface* playerSurf;
 	SDL_Surface* seagullSurf;

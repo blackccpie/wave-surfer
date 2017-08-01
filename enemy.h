@@ -26,7 +26,7 @@ THE SOFTWARE.
 
 #include "sprite.h"
 
-class Enemy : public Sprite
+class Enemy : public sprite
 {
 public:
 
