@@ -37,11 +37,18 @@ THE SOFTWARE.
 class game
 {
 public:
+	struct directions
+	{
+		bool left;
+		bool right;
+	};
+
+public:
 
 	game(SDL_Window* window, SDL_Renderer* renderer);
 
 	void load_Surfaces();
-	void update(double deltaTime, SDL_GameController *currentController, bool &menu);
+	void update(double deltaTime, const directions& dirs, bool &menu);
 	void updateBg(double deltaTime);
 	bool checkLandAngle();
 

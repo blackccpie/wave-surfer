@@ -156,7 +156,7 @@ wave::wave(int w, int h, double x, double y, SDL_Renderer* inRenderer, int inAni
 	lastInp = 0;
 }
 
-double wave::updatePos(SDL_GameController *currentController, double dt)
+double wave::updatePos(bool left, double dt)
 {
-	return (SDL_GameControllerGetAxis(currentController, SDL_CONTROLLER_AXIS_LEFTY) * 0.0001) * dt;
+	return ( ( left ? 15000. : 0. ) * 0.0001 ) * dt;
 }

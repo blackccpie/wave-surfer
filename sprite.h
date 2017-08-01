@@ -61,5 +61,5 @@ public:
 
 	double lastInp = 0;
 
-	double updatePos(SDL_GameController *currentController, double dt);
+	double updatePos(bool left, double dt);
 };

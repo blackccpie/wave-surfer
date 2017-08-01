@@ -30,8 +30,8 @@ THE SOFTWARE.
 #include <iostream>
 #include <chrono>
 
-static void update(game* game, double deltaTime, SDL_GameController *currentController, bool &menu);
-static void process_input(game* game, SDL_DisplayMode &display, SDL_Window* window, bool &fullscreen);
+static void update(game* game, double deltaTime, const game::directions& dirs, bool &menu);
+static void process_input(game* game, game::directions& dirs, SDL_DisplayMode &display, SDL_Window* window, bool &fullscreen);
 static void render(game* game);
 
 int main(int argc, char* argv[])
@@ -76,6 +76,8 @@ int main(int argc, char* argv[])
 	bool menu = true;
 	bool fullscreen = false;
 
+	game::directions dirs{};
+
 	while( game.m_running )
 	{
 		//##### GAME LOOP #####
@@ -86,8 +88,8 @@ int main(int argc, char* argv[])
 
 		//std::cout << actualDT << std::endl;
 
-		process_input(&game,display,window,fullscreen);
-		update(&game, actualDT, nullptr, menu);
+		process_input(&game,dirs,display,window,fullscreen);
+		update(&game, actualDT, dirs, menu);
 		render(&game);
 
 		time = SDL_GetTicks() - start;
@@ -109,12 +111,12 @@ int main(int argc, char* argv[])
 	return 0;
 }
 
-void update(game* game, double dt, SDL_GameController *currentController, bool &menu)
+void update(game* game, double dt, const game::directions& dirs, bool &menu)
 {
-	game->update(dt, currentController, menu);
+	game->update(dt, dirs, menu);
 }
 
-void process_input(game* game, SDL_DisplayMode &display, SDL_Window* window, bool &fullscreen)
+void process_input(game* game, game::directions& dirs, SDL_DisplayMode &display, SDL_Window* window, bool &fullscreen)
 {
 	SDL_Event event;
 
@@ -127,6 +129,12 @@ void process_input(game* game, SDL_DisplayMode &display, SDL_Window* window, boo
 			{
 			case SDLK_ESCAPE:
 				game->m_running = false;
+				break;
+			case SDLK_LEFT:
+				dirs.left = true;
+				break;
+			case SDLK_RIGHT:
+				dirs.right = true;
 				break;
 			case SDLK_a:
 				game->m_play = true;
@@ -153,6 +161,17 @@ void process_input(game* game, SDL_DisplayMode &display, SDL_Window* window, boo
 				}
 				break;
 			default:
+				break;
+			}
+			break;
+		case SDL_KEYUP:
+			switch (event.key.keysym.sym)
+			{
+			case SDLK_LEFT:
+				dirs.left = false;
+				break;
+			case SDLK_RIGHT:
+				dirs.right = false;
 				break;
 			}
 			break;

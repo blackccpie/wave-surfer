@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 #include "game.h"
 
-#include <math.h>
+#include <cmath>
 
 game::game(SDL_Window* inWindow, SDL_Renderer* inRenderer)
 {
@@ -95,12 +95,12 @@ game::game(SDL_Window* inWindow, SDL_Renderer* inRenderer)
 	spriteList.push_back(pressA);
 }
 
-void game::update(double dt, SDL_GameController* currentController, bool &menu)
+void game::update(double dt, const directions& dirs, bool &menu)
 {
-	for (auto& enemy : obSpawner->enemyList)
+	for ( auto& enemy : obSpawner->enemyList )
 	{
-		if (sqrt(pow((m_sprite->dstRect.x + (m_sprite->dstRect.w / 2) )  - (enemy->dstRect.x + (enemy->dstRect.w / 2)),2)
-			+ pow((m_sprite->dstRect.y + (m_sprite->dstRect.h / 2)) - (enemy->dstRect.y + (enemy->dstRect.h / 4)), 2)) < (m_sprite->dstRect.w / 2) + (enemy->dstRect.h / 4))
+		if (std::sqrt(std::pow((m_sprite->dstRect.x + (m_sprite->dstRect.w / 2) )  - (enemy->dstRect.x + (enemy->dstRect.w / 2)),2)
+			+ std::pow((m_sprite->dstRect.y + (m_sprite->dstRect.h / 2)) - (enemy->dstRect.y + (enemy->dstRect.h / 4)), 2)) < (m_sprite->dstRect.w / 2) + (enemy->dstRect.h / 4))
 		{
 			menu = true;
 		}
@@ -112,7 +112,7 @@ void game::update(double dt, SDL_GameController* currentController, bool &menu)
 
 
 	double axis = 0;
-	double inAxis = m_waves->updatePos(currentController, dt);
+	double inAxis = m_waves->updatePos(dirs.left, dt);
 
 
 	//Updating position of the waves
@@ -147,8 +147,8 @@ void game::update(double dt, SDL_GameController* currentController, bool &menu)
 	else
 	{
 		// Rotation calculations
-		double rTrig = SDL_GameControllerGetAxis(currentController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
-		double lTrig = SDL_GameControllerGetAxis(currentController, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+		double rTrig = dirs.right ? 15000. : 0.;
+		double lTrig = dirs.left ? 15000. : 0.;
 
 		if (m_sprite->rotAcc < 50000 && m_sprite->rotAcc > -50000)
 		{
@@ -206,7 +206,7 @@ void game::update(double dt, SDL_GameController* currentController, bool &menu)
 			}
 			else
 			{
-				int numOfFlips = abs((abs(m_sprite->flipAcc) + 60) / 360);
+				int numOfFlips = std::abs((std::abs(m_sprite->flipAcc) + 60) / 360);
 
 				score += 100 * numOfFlips;
 
@@ -237,7 +237,7 @@ void game::update(double dt, SDL_GameController* currentController, bool &menu)
 	m_sprite->dstRect.y = m_sprite->yPos;
 
 	m_sprite->oldX = m_waves->xPos;
-	m_waves->updatePos(currentController, dt);
+	m_waves->updatePos(dirs.left, dt);
 
 	m_sprite->update(dt);
 	updateBg(dt);
